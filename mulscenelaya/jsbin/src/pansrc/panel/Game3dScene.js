@@ -21,14 +21,14 @@ var Game3dScene = /** @class */ (function (_super) {
         _this.layaSceneLevel = new Scene3dLaya3dSprite();
         _this.layaSceneLevel.scene.changeBloodManager(new layapan.LayaBloodManager);
         _this.addChild(_this.layaSceneLevel);
-        _this.layaSceneLevel.addMaskUi(664 - 80, 520 - 80);
+        // this.layaSceneLevel.addMaskUi(664 - 80, 520 - 80)
         _this.uiLayaSceneChar = _this.addModelChar();
-        _this.uiLayaSceneChar.nameEnable = true;
-        _this.uiLayaSceneChar.bloodEnable = true;
-        _this.ape.on(Pan3d.MouseType.MouseDown, _this, _this.onStartDrag);
+        //this.uiLayaSceneChar.nameEnable = true
+        //this.uiLayaSceneChar.bloodEnable = true
+        //  this.ape.on(Pan3d.MouseType.MouseDown, this, this.onStartDrag);
         _this.ape.on(Pan3d.MouseType.MouseWheel, _this, _this.onMouseWheel);
         _this.addGridLineSprite();
-        _this.layaSceneLevel.scene.loadScene("5555", _this.mainSceneComplete, _this.mainSceneProgress, _this.mainSceneComplete);
+        _this.layaSceneLevel.scene.loadScene("scene020", _this.mainSceneComplete, _this.mainSceneProgress, _this.mainSceneComplete);
         return _this;
     }
     Game3dScene.prototype.onMouseWheel = function (e) {
@@ -77,8 +77,9 @@ var Game3dScene = /** @class */ (function (_super) {
     Game3dScene.prototype.addModelChar = function () {
         var $baseChar = new layapan.LayaSceneChar();
         this.layaSceneLevel.scene.addMovieDisplay($baseChar);
-        $baseChar.setRoleUrl(getRoleUrl("5103"));
-        $baseChar.play(Pan3d.CharAction.STAND_MOUNT);
+        $baseChar.setRoleUrl(getRoleUrl("jiemian001"));
+        $baseChar.setWeaponByAvatar(12567);
+        $baseChar.play("rest_01", 0);
         return $baseChar;
     };
     return Game3dScene;

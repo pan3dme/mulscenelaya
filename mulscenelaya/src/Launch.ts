@@ -40,7 +40,7 @@ class Launch {
     //  Laya.stage.addChild(new SceneUiPanel()); //2dui场景 行走
     //   Laya.stage.addChild(new Skill2dUiPanel()); //2d 技能播放
     //    Laya.stage.addChild(new Avatar3dUiPanel()); //3d场景行走
-    //Laya.stage.addChild(new Game3dScene());      //3d包含地图
+    Laya.stage.addChild(new Game3dScene());      //3d包含地图
    // Laya.stage.addChild(new Skill3dUiPanel());   //3d场景播技能
     //    Laya.stage.addChild(new Particle3dPanel());   //播放3d特效
     //   Laya.stage.addChild(new Particle2dPanel());   //播放2d特效
@@ -51,7 +51,7 @@ class Launch {
     //  Laya.stage.addChild(new SelectChar3dPanel); //鼠标中键滚动控制2D场景比例
    //  Laya.stage.addChild(new Particle3dPanel());   //播放3d特效
    // Laya.stage.addChild(new SkillDandaoPanel());   //播放3d特效
-             Laya.stage.addChild(new FramePicPanel());   //播放3d特效
+          //   Laya.stage.addChild(new FramePicPanel());   //播放3d特效
       //  Laya.stage.addChild(new WillDeletePanel());   //播放3d特效
         
         

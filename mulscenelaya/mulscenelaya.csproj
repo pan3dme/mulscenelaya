@@ -790,6 +790,7 @@
     <TypeScriptCompile Include="src\pansrc\panel\Skill3dUiPanel.ts" />
     <TypeScriptCompile Include="src\pansrc\panel\SkillDandaoPanel.ts" />
     <TypeScriptCompile Include="src\pansrc\panel\FramePicPanel.ts" />
+    <TypeScriptCompile Include="src\pansrc\panel\TipsTextPanel.ts" />
     <TypeScriptCompile Include="src\pansrc\panel\WillDeletePanel.ts" />
     <TypeScriptCompile Include="src\pansrc\Scene3dLaya3dSprite.ts" />
   </ItemGroup>
