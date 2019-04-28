@@ -522,6 +522,9 @@ var layapan;
             _super.prototype.loadSceneConfigCom.call(this, obj);
             Pan3d.Scene_data.focus3D.rotationY = $rotationY;
         };
+        LayaOverride2dSceneManager.prototype.addParticle = function (particle) {
+            this.particleManager.addParticle(particle);
+        };
         LayaOverride2dSceneManager.prototype.playLyf = function ($url, $pos, $r) {
             var _this = this;
             if ($r === void 0) { $r = 0; }

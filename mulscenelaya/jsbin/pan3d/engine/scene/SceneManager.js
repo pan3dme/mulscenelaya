@@ -142,7 +142,7 @@ var Pan3d;
                 }
                 else if (itemObj.type == Pan3d.BaseRes.SCENE_PARTICLE_TYPE) {
                     var particle = this.getParticleSprite(itemObj);
-                    Pan3d.ParticleManager.getInstance().addParticle(particle);
+                    this.addParticle(particle);
                     this._sceneParticleList.push(particle);
                 }
             }
@@ -150,15 +150,12 @@ var Pan3d;
             Pan3d.LightProbeManager.getInstance().setLightProbeData(obj.lightProbeItem);
             Pan3d.AstarUtil.setData(obj.astar);
             this._ready = true;
-            if (obj.quadTreeData) {
-                this._sceneQuadTree = new Pan3d.SceneQuadTree();
-                this._sceneQuadTree.init(obj.quadTreeData, this._sceneDic);
-            }
-            else {
-                this._sceneQuadTree = null;
-            }
+            this._sceneQuadTree = null;
             // this.viewFrustum.setData(obj.aabb);
             Pan3d.Scene_data.cam3D.astarRect = Pan3d.AstarUtil.areaRect;
+        };
+        SceneManager.prototype.addParticle = function (particle) {
+            Pan3d.ParticleManager.getInstance().addParticle(particle);
         };
         SceneManager.prototype.getGroundSprite = function (itemObj, terrain) {
             var itemDisplay = new Pan3d.TerrainDisplay3DSprite();

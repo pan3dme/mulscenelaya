@@ -19,10 +19,26 @@ var Pan3d;
             var _this = _super.call(this) || this;
             _this.time = 0;
             _this.dynamic = false;
+            _this.changeColor = [1, 1, 1, 1];
+            _this._alpha = 1;
             _this._rotationMatrix = new Pan3d.Matrix3D;
             return _this;
             //this.lightMapTexture = TextureManager.getInstance().defaultLightMap;
         }
+        Object.defineProperty(Display3DSprite.prototype, "alpha", {
+            get: function () {
+                return this._alpha;
+            },
+            set: function (value) {
+                this._alpha = value;
+                this.changeColor[0] = 1;
+                this.changeColor[1] = 1;
+                this.changeColor[2] = 1;
+                this.changeColor[3] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Display3DSprite.prototype, "aabbVect", {
             get: function () {
                 if (!this._aabbVect) {
@@ -133,13 +149,62 @@ var Pan3d;
             enumerable: true,
             configurable: true
         });
+        Display3DSprite.prototype.upAlphaModel = function () {
+            if (!this.material || !this.objData) {
+                return;
+            }
+            if (!Display3DSprite.alphaModelShader) {
+                Pan3d.ProgrmaManager.getInstance().registe(Pan3d.Display3DAlphaShader.Display3DAlphaShader, new Pan3d.Display3DAlphaShader);
+                Display3DSprite.alphaModelShader = Pan3d.ProgrmaManager.getInstance().getProgram(Pan3d.Display3DAlphaShader.Display3DAlphaShader);
+            }
+            this.updateBind();
+            Pan3d.Scene_data.context3D.setProgram(Display3DSprite.alphaModelShader.program);
+            Pan3d.Scene_data.context3D.cullFaceBack(false);
+            Pan3d.Scene_data.context3D.setBlendParticleFactors(-1);
+            Pan3d.Scene_data.context3D.setVpMatrix(Display3DSprite.alphaModelShader, Pan3d.Scene_data.vpMatrix.m);
+            Pan3d.Scene_data.context3D.setVcMatrix4fv(Display3DSprite.alphaModelShader, "posMatrix3D", this.posMatrix.m);
+            var tf = Pan3d.Scene_data.context3D.pushVa(this.objData.vertexBuffer);
+            if (!tf) {
+                Pan3d.Scene_data.context3D.setVaOffset(0, 3, this.objData.stride, 0);
+                Pan3d.Scene_data.context3D.setVaOffset(1, 2, this.objData.stride, this.objData.uvsOffsets);
+            }
+            Pan3d.Scene_data.context3D.setVc4fv(Display3DSprite.alphaModelShader, "alphadata", this.changeColor);
+            Pan3d.Scene_data.context3D.setRenderTexture(Display3DSprite.alphaModelShader, "alphatexture", this.getAlphaTexture(this.material, this.materialParam), 0);
+            Pan3d.Scene_data.context3D.drawCall(this.objData.indexBuffer, this.objData.treNum);
+        };
+        Display3DSprite.prototype.getAlphaTexture = function ($material, $mp) {
+            if ($mp === void 0) { $mp = null; }
+            //透明的时候只显示一个主材质贴图
+            var texVec = $material.texList;
+            for (var i = 0; i < texVec.length; i++) {
+                if (texVec[i].isMain) {
+                    var txte = texVec[i].texture;
+                    if ($mp) {
+                        for (var j = 0; j < $mp.dynamicTexList.length; j++) {
+                            if ($mp.dynamicTexList[j].target) {
+                                if ($mp.dynamicTexList[j].target.name == texVec[i].name) {
+                                    txte = $mp.dynamicTexList[j].texture;
+                                }
+                            }
+                        }
+                    }
+                    return txte;
+                }
+            }
+            return null;
+        };
         Display3DSprite.prototype.update = function () {
             if (this.dynamic) {
                 if (!this.sceneVisible) {
                     return;
                 }
             }
-            this.updateMaterial();
+            if (this._alpha == 1) {
+                this.updateMaterial();
+            }
+            else {
+                this.upAlphaModel();
+            }
             // return;
             // Scene_data.context3D.setProgram(this.program);
             // Scene_data.context3D.setVcMatrix4fv(this.program, "viewMatrix3D", Scene_data.viewMatrx3D.m);

@@ -21,13 +21,14 @@ var SceneUiPanel = /** @class */ (function (_super) {
         var $imag = new Laya.Image(Pan3d.Scene_data.fileRoot + "2dbg.jpg");
         $imag.x = 20;
         $imag.y = 30;
-        _this.ape.addChild($imag);
+        //   this.ape.addChild($imag);
         _this.ape.pos(100, 100);
         _this.layaSceneLevel = new BaseLaya3dSprite();
         _this.addChild(_this.layaSceneLevel);
         _this.uiLayaSceneChar = _this.addModelChar();
-        _this.uiLayaSceneChar.nameEnable = true;
-        _this.uiLayaSceneChar.bloodEnable = true;
+        _this.uiLayaSceneChar.alpha = 1;
+        //    this.uiLayaSceneChar.nameEnable = true
+        // this.uiLayaSceneChar.bloodEnable = true
         _this.ape.on(Pan3d.MouseType.MouseDown, _this, _this.onStartDrag);
         return _this;
     }
@@ -44,8 +45,10 @@ var SceneUiPanel = /** @class */ (function (_super) {
             this.uiLayaSceneChar.play(Pan3d.CharAction.WALK)
         }
         */
-        this.uiLayaSceneChar.moveTopos(new Pan3d.Vector2D(this.mouseX - this.ape.x, this.mouseY - this.ape.y)); //坐标
-        this.ape.showJumpText(this.layaSceneLevel.scene, new Pan3d.Vector3D(this.uiLayaSceneChar.px, this.uiLayaSceneChar.py, this.uiLayaSceneChar.pz));
+        //  this.uiLayaSceneChar.moveTopos(new Pan3d.Vector2D(this.mouseX - this.ape.x, this.mouseY - this.ape.y));  //坐标
+        //   this.ape.showJumpText(this.layaSceneLevel.scene, new Pan3d.Vector3D(this.uiLayaSceneChar.px, this.uiLayaSceneChar.py, this.uiLayaSceneChar.pz))
+        //       this.uiLayaSceneChar.visible = !this.uiLayaSceneChar.visible
+        this.uiLayaSceneChar.alpha = Math.random();
         /*
         var $mouse: Pan3d.Vector2D = new Pan3d.Vector2D(this.mouseX - this.ape.x, this.mouseY - this.ape.y)
         var $tx: number = $mouse.x * layapan.LayaOverride2dEngine.htmlScale;
@@ -57,10 +60,11 @@ var SceneUiPanel = /** @class */ (function (_super) {
         var $baseChar = new Game2dChar();
         this.layaSceneLevel.scene.addMovieDisplay($baseChar);
         $baseChar.setRoleUrl(getRoleUrl("5103"));
-        $baseChar.setMount("4104");
-        $baseChar.setWing("902");
+        $baseChar.shadow = true;
+        //    $baseChar.setMount("4104");
+        //   $baseChar.setWing("902");
         $baseChar.setWeaponByAvatar(50011);
-        $baseChar.play(Pan3d.CharAction.STAND_MOUNT);
+        //  $baseChar.play(Pan3d.CharAction.STAND_MOUNT);
         $baseChar.forceRotationY = 145;
         $baseChar.set2dPos(400, 200); //坐标
         return $baseChar;

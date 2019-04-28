@@ -267,6 +267,8 @@ var layapan;
                 gl.blendFunc(_sFactor, _dFactor);
                 Pan3d.Scene_data.context3D.setWriteDepth(false);
                 Pan3d.Scene_data.context3D.setDepthTest(false);
+                Laya.BaseShader.activeShader = null;
+                Laya.BaseShader.bindShader = null;
             }
         };
         LayaInsideSprite.prototype.upFrame = function () {

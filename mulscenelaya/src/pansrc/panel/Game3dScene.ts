@@ -14,16 +14,18 @@ class Game3dScene extends Laya.Sprite {
 
         this.addChild(this.layaSceneLevel)
        // this.layaSceneLevel.addMaskUi(664 - 80, 520 - 80)
-        this.uiLayaSceneChar = this.addModelChar();
+     //   this.uiLayaSceneChar = this.addModelChar();
         //this.uiLayaSceneChar.nameEnable = true
         //this.uiLayaSceneChar.bloodEnable = true
 
-      //  this.ape.on(Pan3d.MouseType.MouseDown, this, this.onStartDrag);
+   
+
+   //    this.ape.on(Pan3d.MouseType.MouseDown, this, this.onStartDrag);
         this.ape.on(Pan3d.MouseType.MouseWheel, this, this.onMouseWheel);
 
         this.addGridLineSprite();
 
-        this.layaSceneLevel.scene.loadScene("scene020", this.mainSceneComplete, this.mainSceneProgress, this.mainSceneComplete)
+        this.layaSceneLevel.scene.loadScene("scene_20", this.mainSceneComplete, this.mainSceneProgress, this.mainSceneComplete)
        
     }
     private onMouseWheel(e: any): void {
@@ -60,14 +62,14 @@ class Game3dScene extends Laya.Sprite {
 
     private onStartDrag(e: Event): void {
 
+       // $baseChar.play(Pan3d.CharAction.STANAD);
+        this.uiLayaSceneChar.playBfun(Pan3d.CharAction.STANAD, () => {
+            console.log("有回调")
+        })
 
-        if (this.uiLayaSceneChar.curentAction == Pan3d.CharAction.WALK || this.uiLayaSceneChar.curentAction == Pan3d.CharAction.WALK_MOUNT) {
-            this.uiLayaSceneChar.play(Pan3d.CharAction.STANAD)
-        } else {
-            this.uiLayaSceneChar.play(Pan3d.CharAction.WALK)
-        }
-
-        this.showJumpText(this.layaSceneLevel.scene, new Pan3d.Vector3D(this.uiLayaSceneChar.px, this.uiLayaSceneChar.py, this.uiLayaSceneChar.pz))
+        this.uiLayaSceneChar.x = -100
+        this.uiLayaSceneChar.z = 100
+ 
     }
     public showJumpText($scene: layapan.LayaOverride2dSceneManager, $pos: Pan3d.Vector3D): void {
 
@@ -87,10 +89,12 @@ class Game3dScene extends Laya.Sprite {
     private addModelChar(): layapan.LayaSceneChar {
         var $baseChar: layapan.LayaSceneChar = new layapan.LayaSceneChar();
         this.layaSceneLevel.scene.addMovieDisplay($baseChar);
-        $baseChar.setRoleUrl(getRoleUrl("jiemian001"));
-        $baseChar.setWeaponByAvatar(12567)
-
-        $baseChar.play("rest_01",0);
+        //$baseChar.setRoleUrl(getRoleUrl("jiemian001"));
+        //$baseChar.setWeaponByAvatar(12567)
+        $baseChar.setRoleUrl(getRoleUrl("5103"));
+        $baseChar.play(Pan3d.CharAction.WALK);
+        $baseChar.x=100
+ 
      
         return $baseChar
     }

@@ -543,6 +543,12 @@ module layapan {
             Pan3d.Scene_data.focus3D.rotationY = $rotationY;
 
         }
+        protected addParticle(particle: CombineParticle): void {
+            this.particleManager.addParticle(particle);
+        }
+   
+
+
         public playLyf($url: string, $pos: Pan3d.Vector3D, $r: number = 0): void {
          
             this.groupDataManager.scene =this

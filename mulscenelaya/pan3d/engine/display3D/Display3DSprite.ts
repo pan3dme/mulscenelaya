@@ -1,4 +1,7 @@
 ﻿module Pan3d {
+
+     
+   
     export class Display3DSprite extends Display3D {
 
         public isPerspective: boolean
@@ -38,6 +41,19 @@
 
 
         public dynamic: boolean = false;
+
+        public set alpha(value: number) {
+            this._alpha = value;
+            this.changeColor[0] = 1
+            this.changeColor[1] = 1
+            this.changeColor[2] = 1
+            this.changeColor[3] = value
+        }
+        public changeColor: Array<number> = [1, 1, 1, 1]
+        protected _alpha: number = 1;
+        public get alpha(): number {
+            return this._alpha;
+        }
 
         constructor() {
             super();
@@ -157,6 +173,56 @@
 
             }
         }
+        private static alphaModelShader: Shader3D
+        private upAlphaModel(): void {
+ 
+            if (!this.material||!this.objData) {
+                return;
+            }
+            if (!Display3DSprite.alphaModelShader) {
+                ProgrmaManager.getInstance().registe(Display3DAlphaShader.Display3DAlphaShader, new Display3DAlphaShader)
+                Display3DSprite.alphaModelShader = ProgrmaManager.getInstance().getProgram(Display3DAlphaShader.Display3DAlphaShader)
+            }
+            this.updateBind();
+
+            Scene_data.context3D.setProgram(Display3DSprite.alphaModelShader.program);
+            Scene_data.context3D.cullFaceBack(false);
+            Scene_data.context3D.setBlendParticleFactors(-1);
+ 
+            Scene_data.context3D.setVpMatrix(Display3DSprite.alphaModelShader, Scene_data.vpMatrix.m);
+            Scene_data.context3D.setVcMatrix4fv(Display3DSprite.alphaModelShader, "posMatrix3D", this.posMatrix.m);
+
+            var tf: boolean = Scene_data.context3D.pushVa(this.objData.vertexBuffer);
+            if (!tf) {
+                Scene_data.context3D.setVaOffset(0, 3, this.objData.stride, 0);
+                Scene_data.context3D.setVaOffset(1, 2, this.objData.stride, this.objData.uvsOffsets);
+            }
+            Scene_data.context3D.setVc4fv(Display3DSprite.alphaModelShader, "alphadata", this.changeColor);
+            Scene_data.context3D.setRenderTexture(Display3DSprite.alphaModelShader, "alphatexture", this.getAlphaTexture(this.material, this.materialParam), 0);
+            Scene_data.context3D.drawCall(this.objData.indexBuffer, this.objData.treNum);
+
+        }
+        public getAlphaTexture($material: Material, $mp: MaterialBaseParam = null): WebGLTexture {
+            //透明的时候只显示一个主材质贴图
+            var texVec: Array<TexItem> = $material.texList;
+            for (var i: number = 0; i < texVec.length; i++) {
+                if (texVec[i].isMain) {
+                    var txte: WebGLTexture = texVec[i].texture;
+                    if ($mp) {
+                        for (var j = 0; j < $mp.dynamicTexList.length; j++) {
+                            if ($mp.dynamicTexList[j].target) {
+                                if ($mp.dynamicTexList[j].target.name == texVec[i].name) {
+                                    txte = $mp.dynamicTexList[j].texture;
+                                }
+                            }
+                        }
+                    }
+                    return txte
+                 
+                }
+            }
+            return null
+        }
 
         public update(): void {
             if (this.dynamic) {
@@ -164,8 +230,14 @@
                     return;
                 }
             }
-
-            this.updateMaterial();
+ 
+            if (this._alpha == 1) {
+                this.updateMaterial();
+            } else {
+                this.upAlphaModel()
+            }
+      
+      
             // return;
             // Scene_data.context3D.setProgram(this.program);
             // Scene_data.context3D.setVcMatrix4fv(this.program, "viewMatrix3D", Scene_data.viewMatrx3D.m);

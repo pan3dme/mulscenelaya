@@ -79,5 +79,46 @@ var Pan3d;
         return Shader3D;
     }(Pan3d.ResCount));
     Pan3d.Shader3D = Shader3D;
+    var Display3DAlphaShader = /** @class */ (function (_super) {
+        __extends(Display3DAlphaShader, _super);
+        function Display3DAlphaShader() {
+            return _super.call(this) || this;
+        }
+        Display3DAlphaShader.prototype.binLocation = function ($context) {
+            $context.bindAttribLocation(this.program, 0, "v3Position");
+            $context.bindAttribLocation(this.program, 1, "v2CubeTexST");
+        };
+        Display3DAlphaShader.prototype.getVertexShaderString = function () {
+            var $str = "attribute vec3 v3Position;" +
+                "attribute vec2 v2CubeTexST;" +
+                "uniform mat4 vpMatrix3D;" +
+                "uniform mat4 posMatrix3D;" +
+                "varying vec2 v_texCoord;" +
+                "void main(void)" +
+                "{" +
+                "   v_texCoord = vec2(v2CubeTexST.x, v2CubeTexST.y);" +
+                "   vec4 vt0= vec4(v3Position, 1.0);" +
+                "   vt0 = posMatrix3D * vt0;" +
+                "   vt0 = vpMatrix3D * vt0;" +
+                "   gl_Position = vt0;" +
+                "}";
+            return $str;
+        };
+        Display3DAlphaShader.prototype.getFragmentShaderString = function () {
+            var $str = " precision mediump float;\n" +
+                "uniform sampler2D alphatexture;\n" +
+                "uniform vec4 alphadata;\n" +
+                "varying vec2 v_texCoord;\n" +
+                "void main(void)\n" +
+                "{\n" +
+                "vec4 infoUv = texture2D(alphatexture, v_texCoord.xy);\n" +
+                "gl_FragColor =infoUv*alphadata;\n" +
+                "}";
+            return $str;
+        };
+        Display3DAlphaShader.Display3DAlphaShader = "Display3DAlphaShader";
+        return Display3DAlphaShader;
+    }(Pan3d.Shader3D));
+    Pan3d.Display3DAlphaShader = Display3DAlphaShader;
 })(Pan3d || (Pan3d = {}));
 //# sourceMappingURL=Shader3D.js.map

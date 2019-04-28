@@ -26,22 +26,13 @@ module layapan {
         private _avatar: number = -1;
    
         public _visible: boolean = true
-        public changeColor: Array<number> = [1, 1, 1, 1]
+
         constructor() {
             super();
             this.x
         }
-        public set alpha(value: number) {
-            this._alpha = value;
-            this.changeColor[0] = 1
-            this.changeColor[1] = 1
-            this.changeColor[2] = 1
-            this.changeColor[3] = value
-        }
-        private _alpha: number = 1;
-        public get alpha(): number {
-            return this._alpha
-        }
+   
+ 
         public updateMaterialMesh($mesh: MeshData): void {
             if (this.changeColor[0] != 1 || this.changeColor[1] != 1 || this.changeColor[2] != 1 || this.changeColor[3] != 1) {
                 if (!LayaSceneBaseChar.alphaShader) {
@@ -139,7 +130,34 @@ module layapan {
 			if (this._shadow) {
 				this._shadow._visible = this.visible;
 			}
-		}
+        }
+        public set alpha(value: number) {
+            this._alpha = value;
+            this.changeColor[0] = 1
+            this.changeColor[1] = 1
+            this.changeColor[2] = 1
+            this.changeColor[3] = value
+
+            //this._partDic[$key]
+
+            for (var strKey in this._partDic) {
+                var item: Array<any> = (Array<any>(this._partDic[strKey]))
+                for (var i: number = 0; i < item.length; i++) {
+
+                    if (item[i] && item[i][0]) {
+                        item[i][0].alpha = value
+                    }
+                 
+              
+                }
+
+
+            }
+        }
+        public get alpha(): number {
+            return this._alpha;
+        }
+
 
 		protected getSceneCharAvatarUrl(num: number): string {
 
@@ -192,6 +210,8 @@ module layapan {
                     display.dynamic = true;
                     ary.push(display);
                     display.setBind(this, $bindSocket);
+                    console.log(this, this.alpha)
+                    display.alpha = this.alpha;
                     this._scene.addSpriteDisplay(display);
                     if (item.isGroup) {
                         display.setGroup(posV3d, rotationV3d, scaleV3d);

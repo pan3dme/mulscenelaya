@@ -129,13 +129,14 @@ var FramePicPanel = /** @class */ (function (_super) {
         //  var combineParticle: CombineParticle = layapan.Frame3DAtlasParticle.getFrameParticle(Scene_data.fileRoot + "atlas/", "10101_1", eee)
         var combineParticle = layapan.Frame3DAtlasParticle.getFrameParticle(Scene_data.fileRoot + pathname + "/", effictname, info);
         this.layaSceneLevel.scene.particleManager.addParticle(combineParticle);
-        var povsto = new Pan3d.Vector2D(400, 200);
+        var povsto = new Pan3d.Vector2D(100, 200);
         if (getUrlParam("x")) {
             povsto.x += Number(getUrlParam("x"));
         }
         if (getUrlParam("y")) {
             povsto.y += Number(getUrlParam("y"));
         }
+        var povsto = new Pan3d.Vector2D(0, 0);
         var $nScale = 0.25 / scene2d.Override2dEngine.htmlScale;
         var $tx = povsto.x * $nScale;
         var $tz = povsto.y * $nScale / (Math.sin(45 * Math.PI / 180)) * -1;

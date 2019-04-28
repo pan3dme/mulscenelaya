@@ -167,7 +167,8 @@
                     this.addDisplay(itemDisplay)
                 } else if (itemObj.type == BaseRes.SCENE_PARTICLE_TYPE) {
                     var particle: CombineParticle = this.getParticleSprite(itemObj);
-                    ParticleManager.getInstance().addParticle(particle);
+
+                    this.addParticle(particle)
                     this._sceneParticleList.push(particle);
                 }
             }
@@ -182,12 +183,9 @@
 
             this._ready = true;
 
-            if (obj.quadTreeData) {
-                this._sceneQuadTree = new SceneQuadTree();
-                this._sceneQuadTree.init(obj.quadTreeData, this._sceneDic);
-            } else {
+       
                 this._sceneQuadTree = null;
-            }
+           
 
             // this.viewFrustum.setData(obj.aabb);
 
@@ -196,6 +194,9 @@
 
 
 
+        }
+        protected addParticle(particle: CombineParticle): void {
+            ParticleManager.getInstance().addParticle(particle);
         }
 
         private getGroundSprite(itemObj: any, terrain: Array<GroundDataMesh>): TerrainDisplay3DSprite {
@@ -270,7 +271,7 @@
             return itemDisplay;
         }
 
-        private getParticleSprite(itemObj: any): CombineParticle {
+        protected getParticleSprite(itemObj: any): CombineParticle {
             var particle: CombineParticle
 
             particle = ParticleManager.getInstance().getParticleByte(Scene_data.fileRoot + itemObj.url);

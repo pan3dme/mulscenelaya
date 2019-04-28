@@ -58,7 +58,7 @@ class SelectChar3dPanel extends Laya.Sprite {
             var $hit: boolean = this.charItem[i].mouseClik($a, $b)
             if ($hit) {
                 this.charItem[i].nameEnable = true;
-                this.charItem[i].bloodEnable = true;
+               // this.charItem[i].bloodEnable = true;
             }
         }
     }
@@ -71,7 +71,8 @@ class SelectChar3dPanel extends Laya.Sprite {
     private addModelChar(): Game3dChar {
         var $baseChar: Game3dChar = new Game3dChar();
         this.layaSceneLevel.scene.addMovieDisplay($baseChar);
-        $baseChar.setRoleUrl(getRoleUrl("5103"));
+        $baseChar.setRoleUrl(getRoleUrl("3015"));
+        $baseChar.setWeaponByAvatar(123306)
 
 
         return $baseChar

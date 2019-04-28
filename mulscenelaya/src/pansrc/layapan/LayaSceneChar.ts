@@ -54,7 +54,7 @@ module layapan {
         protected _pz: number = 0;
         private _pRotationY: number = 0;
         toRotationY: number = 0;
-        private _pScale: number = 1;
+        protected _pScale: number = 1;
 
         tittleHeight: number = 50;
 
@@ -69,8 +69,23 @@ module layapan {
             this._bloodColor = LayaSceneChar.BLOOD_COLOR_HP;
             this._angerColor = LayaSceneChar.BLOOD_COLOR_ANGER;
         }
+        private chuangeActionFun: Function
+        playBfun($action: string, $bfun: Function): void {
+            this.curentAction = null;
+            this.chuangeActionFun = $bfun
+            this.play($action, 2)
 
-      
+        }
+        protected changeAction($action: string): void {
+            super.changeAction($action)
+            if (this.chuangeActionFun) {
+                this.chuangeActionFun()
+                this.chuangeActionFun = null
+            }
+
+
+        }
+
         /**强制角度 */
         set forceRotationY(val: number) {
             this.pRotationY = val;
@@ -127,7 +142,7 @@ module layapan {
             return this.isMount;
         }
 
-        private _wingDisplay: LayaSceneBaseChar;
+        protected _wingDisplay: LayaSceneBaseChar;
 
         public setWing(v: string): void {
             if (v && v.length) {
@@ -183,9 +198,9 @@ module layapan {
             (<LayaOverride2dSceneManager>this._scene).groupDataManager.getGroupData(Scene_data.fileRoot + $url, (groupRes: GroupRes) => {
 
                 console.log($bindSocket, groupRes, ary)
-               this.loadPartRes($bindSocket, groupRes, ary)
+                this.loadPartRes($bindSocket, groupRes, ary)
             })
-   
+
         }
         public addPartToPos($key: string, $url: string, $pos: Vector3D = null): void {
             if (this._partUrl[$key] == $url) {//如果相同则返回
@@ -212,8 +227,8 @@ module layapan {
                 var item: GroupItem = groupRes.dataAry[i];
 
                 var posV3d: Vector3D = new Vector3D($pos.x, $pos.y, $pos.z)
-                var rotationV3d: Vector3D = new Vector3D(0,0,0)
-                var scaleV3d: Vector3D = new Vector3D(1,1,1)
+                var rotationV3d: Vector3D = new Vector3D(0, 0, 0)
+                var scaleV3d: Vector3D = new Vector3D(1, 1, 1)
                 if (item.isGroup) {
                     posV3d = new Vector3D(item.x + $pos.x, item.y + $pos.y, item.z + $pos.z);
                     rotationV3d = new Vector3D(item.rotationX, item.rotationY, item.rotationZ);
@@ -257,7 +272,7 @@ module layapan {
                     (<LayaOverride2dSceneManager>this._scene).particleManager.removeParticle(ary[i]);
                     (<CombineParticle>ary[i]).destory();
                 } else if (ary[i] instanceof Display3DSprite) {
-                     this._scene.removeSpriteDisplay(ary[i]);
+                    this._scene.removeSpriteDisplay(ary[i]);
                     (<Display3DSprite>ary[i]).destory();
                 }
             }
@@ -409,7 +424,7 @@ module layapan {
 			super.removeSelf();
 		}
         */
-        public   destory(): void {
+        public destory(): void {
             if (this._hasDestory) {
                 return;
             }
@@ -444,6 +459,19 @@ module layapan {
 
         set visible(value: boolean) {
             this._visible = value;
+            // 当模型需要隐藏的时候，同时隐藏名字和特效
+            if (this._charNameVo) {
+                this._charNameVo.visible = value
+            }
+            for (var key in this._partDic) {
+                var ary: Array<any> = this._partDic[key];
+                for (var i: number = 0; i < ary.length; i++) {
+                    (<CombineParticle>ary[i]).sceneVisible = value
+                }
+            }
+
+ 
+
             this.applyVisible();
         }
         get visible(): boolean {
@@ -459,7 +487,7 @@ module layapan {
         }
 
 
-        private _resultVisible: boolean = true;
+        public _resultVisible: boolean = true;
         get resultVisible(): boolean {
             return this._resultVisible;
         }
@@ -514,7 +542,7 @@ module layapan {
         }
 
         // 是否显示血条
-        private _bloodEnable: boolean = false;
+        public _bloodEnable: boolean = false;
         set bloodEnable(v: boolean) {
             this._bloodEnable = v;
             if (!this._charBloodVo) {
@@ -523,7 +551,7 @@ module layapan {
                 this._charBloodVo.num = 100
                 this._charBloodVo.midNum = 0
                 this._charBloodVo.visible = false
-            } 
+            }
         }
 
         //怒气条
@@ -547,7 +575,7 @@ module layapan {
         private _angerEnable: boolean = false;
         set angerEnable(v: boolean) {
             this._angerEnable = v;
-            
+
         }
 
         // 名字
@@ -574,11 +602,11 @@ module layapan {
             } else {
                 this._charNameVo.name = "潘佳治" + random(99);
             }
-         //   this._charNameVo.visible = false
+            //   this._charNameVo.visible = false
         }
 
 
-        public  updateBind(): void {
+        public updateBind(): void {
             super.updateBind();
             this.updateWeaponScale();
             this.refreshPos();
@@ -661,7 +689,6 @@ module layapan {
             if (this._optimization) {
                 return;
             }
-
             super.update();
             if (this._showHitBox) {
                 if (!this.lineSprite) {
@@ -686,7 +713,7 @@ module layapan {
             }
         }
 
-        public  math_distance($other: Display3dMovie): number {
+        public math_distance($other: Display3dMovie): number {
             return MathClass.math_distance(this.px, this.pz, $other.x, $other.z)
         }
         public get2dPos(): Vector2D {
@@ -734,7 +761,7 @@ module layapan {
             m.append($scene.viewMatrx3D.clone());
             var fovw: number = Scene_data.stageWidth
             var fovh: number = Scene_data.stageHeight
- 
+
             var p: Vector3D = m.transformVector($pos);
             var b: Vector2D = new Vector2D;
             b.x = ((p.x / p.w) + 1) * (fovw / 2)
@@ -742,9 +769,9 @@ module layapan {
             return b;
         }
         public mouseClik(lineA: Vector3D, $lineB: Vector3D): boolean {
-     
+
             var $scene: LayaOverride2dSceneManager = <LayaOverride2dSceneManager>this._scene
-         
+
             var $pos: Vector3D = $scene.cameraMatrix.transformVector(this.getCurrentPos())
 
             if ($pos.z < 10) { //在Z后面
@@ -752,7 +779,7 @@ module layapan {
             }
             var hitVec2: Vector2D = this.math3DWorldtoDisplay2DPos($lineB)
 
-                 if (this._skinMesh) {
+            if (this._skinMesh) {
                 if (!this._hitBox2DItem) {
                     this._hitBox2DItem = new Array;
                 }
@@ -779,40 +806,40 @@ module layapan {
             return false
 
 
-         
 
-  //var $pos: Vector3D = Scene_data.cam3D.cameraMatrix.transformVector(this.getCurrentPos())
-  //          if ($pos.z < Scene_data.cam3D.distance / 3) { //在Z后面
-  //              return false
-  //          }
 
-  //          var hitVec2: Vector2D = MathUtil.math3DWorldtoDisplay2DPos($lineB)
-  //          if (this._skinMesh) {
-  //              if (!this._hitBox2DItem) {
-  //                  this._hitBox2DItem = new Array;
-  //              }
-  //              this._hitBox2DItem.length = 0
-  //              for (var j: number = 0; j < this._skinMesh.hitPosItem.length; j++) {
-  //                  var temppp: Vector3D = this.posMatrix.transformVector(this._skinMesh.hitPosItem[j])
-  //                  this._hitBox2DItem.push(MathUtil.math3DWorldtoDisplay2DPos(temppp))
-  //              }
-  //              for (var i: number = 0; i < this._triIndex.length / 3; i++) {
-  //                  TestTriangle.baseTri.p1 = this._hitBox2DItem[this._triIndex[i * 3 + 0]];
-  //                  TestTriangle.baseTri.p2 = this._hitBox2DItem[this._triIndex[i * 3 + 1]];
-  //                  TestTriangle.baseTri.p3 = this._hitBox2DItem[this._triIndex[i * 3 + 2]];
-  //                  if (TestTriangle.baseTri.checkPointIn(hitVec2)) {
-  //                      console.log(this._hitBox2DItem)
-  //                      return true
-  //                  }
-  //              }
-  //          } else {
-  //              if (Vector2D.distance(hitVec2, MathUtil.math3DWorldtoDisplay2DPos(this.posMatrix.position)) < 20) {
-  //                  return true
-  //              }
+            //var $pos: Vector3D = Scene_data.cam3D.cameraMatrix.transformVector(this.getCurrentPos())
+            //          if ($pos.z < Scene_data.cam3D.distance / 3) { //在Z后面
+            //              return false
+            //          }
 
-  //          }
-  //          return false
-     
+            //          var hitVec2: Vector2D = MathUtil.math3DWorldtoDisplay2DPos($lineB)
+            //          if (this._skinMesh) {
+            //              if (!this._hitBox2DItem) {
+            //                  this._hitBox2DItem = new Array;
+            //              }
+            //              this._hitBox2DItem.length = 0
+            //              for (var j: number = 0; j < this._skinMesh.hitPosItem.length; j++) {
+            //                  var temppp: Vector3D = this.posMatrix.transformVector(this._skinMesh.hitPosItem[j])
+            //                  this._hitBox2DItem.push(MathUtil.math3DWorldtoDisplay2DPos(temppp))
+            //              }
+            //              for (var i: number = 0; i < this._triIndex.length / 3; i++) {
+            //                  TestTriangle.baseTri.p1 = this._hitBox2DItem[this._triIndex[i * 3 + 0]];
+            //                  TestTriangle.baseTri.p2 = this._hitBox2DItem[this._triIndex[i * 3 + 1]];
+            //                  TestTriangle.baseTri.p3 = this._hitBox2DItem[this._triIndex[i * 3 + 2]];
+            //                  if (TestTriangle.baseTri.checkPointIn(hitVec2)) {
+            //                      console.log(this._hitBox2DItem)
+            //                      return true
+            //                  }
+            //              }
+            //          } else {
+            //              if (Vector2D.distance(hitVec2, MathUtil.math3DWorldtoDisplay2DPos(this.posMatrix.position)) < 20) {
+            //                  return true
+            //              }
+
+            //          }
+            //          return false
+
         }
 
         public removeStage(): void {

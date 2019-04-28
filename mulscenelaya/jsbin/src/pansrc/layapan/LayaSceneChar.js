@@ -62,6 +62,18 @@ var layapan;
             _this._angerColor = LayaSceneChar.BLOOD_COLOR_ANGER;
             return _this;
         }
+        LayaSceneChar.prototype.playBfun = function ($action, $bfun) {
+            this.curentAction = null;
+            this.chuangeActionFun = $bfun;
+            this.play($action, 2);
+        };
+        LayaSceneChar.prototype.changeAction = function ($action) {
+            _super.prototype.changeAction.call(this, $action);
+            if (this.chuangeActionFun) {
+                this.chuangeActionFun();
+                this.chuangeActionFun = null;
+            }
+        };
         Object.defineProperty(LayaSceneChar.prototype, "forceRotationY", {
             /**强制角度 */
             set: function (val) {
@@ -431,6 +443,16 @@ var layapan;
             },
             set: function (value) {
                 this._visible = value;
+                // 当模型需要隐藏的时候，同时隐藏名字和特效
+                if (this._charNameVo) {
+                    this._charNameVo.visible = value;
+                }
+                for (var key in this._partDic) {
+                    var ary = this._partDic[key];
+                    for (var i = 0; i < ary.length; i++) {
+                        ary[i].sceneVisible = value;
+                    }
+                }
                 this.applyVisible();
             },
             enumerable: true,

@@ -121,14 +121,14 @@ class FramePicPanel extends Laya.Sprite {
   
         this.layaSceneLevel.scene.particleManager.addParticle(combineParticle);
 
-        var povsto: Pan3d.Vector2D = new Pan3d.Vector2D(400, 200)
+        var povsto: Pan3d.Vector2D = new Pan3d.Vector2D(100, 200)
         if (getUrlParam("x")) {
             povsto.x += Number(getUrlParam("x"))
         }
         if (getUrlParam("y")) {
             povsto.y += Number(getUrlParam("y"))
         }
-
+        var povsto: Pan3d.Vector2D = new Pan3d.Vector2D(0, 0)
         var $nScale: number = 0.25 / scene2d.Override2dEngine.htmlScale
         var $tx: number = povsto.x * $nScale;
         var $tz: number = povsto.y * $nScale / (Math.sin(45 * Math.PI / 180)) * -1;

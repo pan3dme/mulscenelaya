@@ -110,6 +110,7 @@ class Mode3dPanel extends Laya.Sprite {
         $baseChar.setWing("902");
         $baseChar.setWeaponByAvatar(50011);
         $baseChar.play(Pan3d.CharAction.STAND_MOUNT);
+        $baseChar.visible
 
         return $baseChar
     }

@@ -11,15 +11,16 @@ class SceneUiPanel extends Laya.Sprite {
         var $imag: Laya.Image = new Laya.Image(Pan3d.Scene_data.fileRoot+"2dbg.jpg")
         $imag.x = 20
         $imag.y=30
-        this.ape.addChild($imag);
+     //   this.ape.addChild($imag);
 
         this.ape.pos(100, 100)
      
         this.layaSceneLevel = new BaseLaya3dSprite();
         this.addChild(this.layaSceneLevel)
         this.uiLayaSceneChar = this.addModelChar();
-        this.uiLayaSceneChar.nameEnable = true
-        this.uiLayaSceneChar.bloodEnable = true
+        this.uiLayaSceneChar.alpha=1
+    //    this.uiLayaSceneChar.nameEnable = true
+       // this.uiLayaSceneChar.bloodEnable = true
 
 
         this.ape.on(Pan3d.MouseType.MouseDown, this, this.onStartDrag);
@@ -44,9 +45,11 @@ class SceneUiPanel extends Laya.Sprite {
         }
         */
 
-        this.uiLayaSceneChar.moveTopos(new Pan3d.Vector2D(this.mouseX - this.ape.x, this.mouseY - this.ape.y));  //坐标
-        this.ape.showJumpText(this.layaSceneLevel.scene, new Pan3d.Vector3D(this.uiLayaSceneChar.px, this.uiLayaSceneChar.py, this.uiLayaSceneChar.pz))
+      //  this.uiLayaSceneChar.moveTopos(new Pan3d.Vector2D(this.mouseX - this.ape.x, this.mouseY - this.ape.y));  //坐标
+     //   this.ape.showJumpText(this.layaSceneLevel.scene, new Pan3d.Vector3D(this.uiLayaSceneChar.px, this.uiLayaSceneChar.py, this.uiLayaSceneChar.pz))
+ //       this.uiLayaSceneChar.visible = !this.uiLayaSceneChar.visible
 
+        this.uiLayaSceneChar.alpha = Math.random();
 
         /*
         var $mouse: Pan3d.Vector2D = new Pan3d.Vector2D(this.mouseX - this.ape.x, this.mouseY - this.ape.y)
@@ -62,10 +65,12 @@ class SceneUiPanel extends Laya.Sprite {
         var $baseChar: Game2dChar = new Game2dChar();
         this.layaSceneLevel.scene.addMovieDisplay($baseChar);
         $baseChar.setRoleUrl(getRoleUrl("5103"));
-        $baseChar.setMount("4104");
-        $baseChar.setWing("902");
+        $baseChar.shadow = true
+ 
+    //    $baseChar.setMount("4104");
+     //   $baseChar.setWing("902");
         $baseChar.setWeaponByAvatar(50011);
-        $baseChar.play(Pan3d.CharAction.STAND_MOUNT);
+      //  $baseChar.play(Pan3d.CharAction.STAND_MOUNT);
         $baseChar.forceRotationY = 145
         $baseChar.set2dPos(400, 200);  //坐标
         return $baseChar

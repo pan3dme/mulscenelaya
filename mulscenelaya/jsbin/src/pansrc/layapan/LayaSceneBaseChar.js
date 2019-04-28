@@ -30,25 +30,9 @@ var layapan;
             var _this = _super.call(this) || this;
             _this._avatar = -1;
             _this._visible = true;
-            _this.changeColor = [1, 1, 1, 1];
-            _this._alpha = 1;
             _this.x;
             return _this;
         }
-        Object.defineProperty(LayaSceneBaseChar.prototype, "alpha", {
-            get: function () {
-                return this._alpha;
-            },
-            set: function (value) {
-                this._alpha = value;
-                this.changeColor[0] = 1;
-                this.changeColor[1] = 1;
-                this.changeColor[2] = 1;
-                this.changeColor[3] = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
         LayaSceneBaseChar.prototype.updateMaterialMesh = function ($mesh) {
             if (this.changeColor[0] != 1 || this.changeColor[1] != 1 || this.changeColor[2] != 1 || this.changeColor[3] != 1) {
                 if (!LayaSceneBaseChar.alphaShader) {
@@ -149,6 +133,29 @@ var layapan;
                 this._shadow._visible = this.visible;
             }
         };
+        Object.defineProperty(LayaSceneBaseChar.prototype, "alpha", {
+            get: function () {
+                return this._alpha;
+            },
+            set: function (value) {
+                this._alpha = value;
+                this.changeColor[0] = 1;
+                this.changeColor[1] = 1;
+                this.changeColor[2] = 1;
+                this.changeColor[3] = value;
+                //this._partDic[$key]
+                for (var strKey in this._partDic) {
+                    var item = (Array(this._partDic[strKey]));
+                    for (var i = 0; i < item.length; i++) {
+                        if (item[i] && item[i][0]) {
+                            item[i][0].alpha = value;
+                        }
+                    }
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         LayaSceneBaseChar.prototype.getSceneCharAvatarUrl = function (num) {
             var $url = getRoleUrl(String(num));
             return getRoleUrl(String(num));
@@ -196,6 +203,8 @@ var layapan;
                     display.dynamic = true;
                     ary.push(display);
                     display.setBind(this, $bindSocket);
+                    console.log(this, this.alpha);
+                    display.alpha = this.alpha;
                     this._scene.addSpriteDisplay(display);
                     if (item.isGroup) {
                         display.setGroup(posV3d, rotationV3d, scaleV3d);

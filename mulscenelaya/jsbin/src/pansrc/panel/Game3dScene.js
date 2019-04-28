@@ -22,13 +22,13 @@ var Game3dScene = /** @class */ (function (_super) {
         _this.layaSceneLevel.scene.changeBloodManager(new layapan.LayaBloodManager);
         _this.addChild(_this.layaSceneLevel);
         // this.layaSceneLevel.addMaskUi(664 - 80, 520 - 80)
-        _this.uiLayaSceneChar = _this.addModelChar();
+        //   this.uiLayaSceneChar = this.addModelChar();
         //this.uiLayaSceneChar.nameEnable = true
         //this.uiLayaSceneChar.bloodEnable = true
-        //  this.ape.on(Pan3d.MouseType.MouseDown, this, this.onStartDrag);
+        //    this.ape.on(Pan3d.MouseType.MouseDown, this, this.onStartDrag);
         _this.ape.on(Pan3d.MouseType.MouseWheel, _this, _this.onMouseWheel);
         _this.addGridLineSprite();
-        _this.layaSceneLevel.scene.loadScene("scene020", _this.mainSceneComplete, _this.mainSceneProgress, _this.mainSceneComplete);
+        _this.layaSceneLevel.scene.loadScene("scene_20", _this.mainSceneComplete, _this.mainSceneProgress, _this.mainSceneComplete);
         return _this;
     }
     Game3dScene.prototype.onMouseWheel = function (e) {
@@ -53,13 +53,12 @@ var Game3dScene = /** @class */ (function (_super) {
         this.layaSceneLevel.y = this.ape.y + 40;
     };
     Game3dScene.prototype.onStartDrag = function (e) {
-        if (this.uiLayaSceneChar.curentAction == Pan3d.CharAction.WALK || this.uiLayaSceneChar.curentAction == Pan3d.CharAction.WALK_MOUNT) {
-            this.uiLayaSceneChar.play(Pan3d.CharAction.STANAD);
-        }
-        else {
-            this.uiLayaSceneChar.play(Pan3d.CharAction.WALK);
-        }
-        this.showJumpText(this.layaSceneLevel.scene, new Pan3d.Vector3D(this.uiLayaSceneChar.px, this.uiLayaSceneChar.py, this.uiLayaSceneChar.pz));
+        // $baseChar.play(Pan3d.CharAction.STANAD);
+        this.uiLayaSceneChar.playBfun(Pan3d.CharAction.STANAD, function () {
+            console.log("有回调");
+        });
+        this.uiLayaSceneChar.x = -100;
+        this.uiLayaSceneChar.z = 100;
     };
     Game3dScene.prototype.showJumpText = function ($scene, $pos) {
         var $jumpVo = new Pan3d.TextJumpUiVo();
@@ -77,9 +76,11 @@ var Game3dScene = /** @class */ (function (_super) {
     Game3dScene.prototype.addModelChar = function () {
         var $baseChar = new layapan.LayaSceneChar();
         this.layaSceneLevel.scene.addMovieDisplay($baseChar);
-        $baseChar.setRoleUrl(getRoleUrl("jiemian001"));
-        $baseChar.setWeaponByAvatar(12567);
-        $baseChar.play("rest_01", 0);
+        //$baseChar.setRoleUrl(getRoleUrl("jiemian001"));
+        //$baseChar.setWeaponByAvatar(12567)
+        $baseChar.setRoleUrl(getRoleUrl("5103"));
+        $baseChar.play(Pan3d.CharAction.WALK);
+        $baseChar.x = 100;
         return $baseChar;
     };
     return Game3dScene;
