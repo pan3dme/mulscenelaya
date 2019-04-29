@@ -44,7 +44,10 @@ module layapan {
                 Scene_data.context3D.cullFaceBack(false);
                 Scene_data.context3D.setBlendParticleFactors(-1);
                 this.setVcMatrix($mesh);
-                this.setMaterialTextureAlpha($mesh.material, $mesh.materialParam);
+         
+ 
+                Scene_data.context3D.setRenderTexture($mesh.material.shader, "alphatexture", this.getAlphaTexture($mesh.material, $mesh.materialParam), 0);
+ 
                 this.setVa($mesh);
                 Scene_data.context3D.setVc4fv($mesh.material.shader, "alphadata", this.changeColor);
                 this.setMeshVc($mesh);
@@ -55,26 +58,7 @@ module layapan {
             }
         }
 
-        public setMaterialTextureAlpha($material: Material, $mp: MaterialBaseParam = null): void {
-            //透明的时候只显示一个主材质贴图
-            var texVec: Array<TexItem> = $material.texList;
-            for (var i: number = 0; i < texVec.length; i++) {
-                if (texVec[i].isMain) {
-                    var txte: WebGLTexture = texVec[i].texture;
-                    var $has: boolean = false;
-                    if ($mp) {
-                        for (var j = 0; j < $mp.dynamicTexList.length; j++) {
-                            if ($mp.dynamicTexList[j].target) {
-                                if ($mp.dynamicTexList[j].target.name == texVec[i].name) {
-                                    txte = $mp.dynamicTexList[j].texture;
-                                }
-                            }
-                        }
-                    }
-                    Scene_data.context3D.setRenderTexture($material.shader, "alphatexture", txte, 0);
-                }
-            }
-        }
+       
         private static alphaShader: Shader3D
         private makeAlphaShader(): Shader3D {
             var shader: Shader3D = new MaterialAnimShader();
