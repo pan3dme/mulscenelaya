@@ -175,13 +175,42 @@
         }
         private static alphaModelShader: Shader3D
         private upAlphaModel(): void {
- 
             if (!this.material||!this.objData) {
                 return;
             }
             if (!Display3DSprite.alphaModelShader) {
-                ProgrmaManager.getInstance().registe(Display3DAlphaShader.Display3DAlphaShader, new Display3DAlphaShader)
-                Display3DSprite.alphaModelShader = ProgrmaManager.getInstance().getProgram(Display3DAlphaShader.Display3DAlphaShader)
+                Display3DSprite.alphaModelShader = new Shader3D()
+                Display3DSprite.alphaModelShader .vstr =
+                    "attribute vec3 v3Position;" +
+                    "attribute vec2 v2CubeTexST;" +
+                    "uniform mat4 vpMatrix3D;" +
+                    "uniform mat4 posMatrix3D;" +
+                    "varying vec2 v_texCoord;" +
+                    "void main(void)" +
+                    "{" +
+                    "   v_texCoord = vec2(v2CubeTexST.x, v2CubeTexST.y);" +
+
+                    "   vec4 vt0= vec4(v3Position, 1.0);" +
+
+                    "   vt0 = posMatrix3D * vt0;" +
+                    "   vt0 = vpMatrix3D * vt0;" +
+
+                    "   gl_Position = vt0;" +
+                    "}";
+                Display3DSprite.alphaModelShader .fragment =
+                    " precision mediump float;\n" +
+                    "uniform sampler2D alphatexture;\n" +
+                    "uniform vec4 alphadata;\n" +
+                    "varying vec2 v_texCoord;\n" +
+                    "void main(void)\n" +
+                    "{\n" +
+                    "vec4 infoUv = texture2D(alphatexture, v_texCoord.xy);\n" +
+                    "gl_FragColor =infoUv*alphadata;\n" +
+                    "}";
+
+ 
+                Display3DSprite.alphaModelShader .encode()
+ 
             }
             this.updateBind();
 

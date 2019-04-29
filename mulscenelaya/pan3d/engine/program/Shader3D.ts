@@ -76,11 +76,17 @@ module Pan3d {
 
         }
         getVertexShaderString(): string {
+            if (this.vstr) {
+                return this.vstr
+            }
             return ""
         }
         getFragmentShaderString(): string {
             return ""
         }
+
+        public vstr: string
+ 
         public destory(): void {
             this.vertex = null;
             this.fragment = null;
@@ -90,55 +96,5 @@ module Pan3d {
         }
     }
 
-
-    export class Display3DAlphaShader extends Pan3d.Shader3D {
-        static Display3DAlphaShader: string = "Display3DAlphaShader";
-        constructor() {
-            super();
-        }
-        binLocation($context: WebGLRenderingContext): void {
-            $context.bindAttribLocation(this.program, 0, "v3Position");
-            $context.bindAttribLocation(this.program, 1, "v2CubeTexST");
-        }
-        getVertexShaderString(): string {
-            var $str: string =
-                "attribute vec3 v3Position;" +
-                "attribute vec2 v2CubeTexST;" +
-
-                "uniform mat4 vpMatrix3D;" +
-                "uniform mat4 posMatrix3D;" +
-                "varying vec2 v_texCoord;" +
-
-                "void main(void)" +
-                "{" +
-                "   v_texCoord = vec2(v2CubeTexST.x, v2CubeTexST.y);" +
-
-                "   vec4 vt0= vec4(v3Position, 1.0);" +
-
-                "   vt0 = posMatrix3D * vt0;" +
-                "   vt0 = vpMatrix3D * vt0;" +
-
-                "   gl_Position = vt0;" +
-                "}"
-            return $str
-
-
-        }
-        getFragmentShaderString(): string {
-            var $str: string =
-
-                " precision mediump float;\n" +
-                "uniform sampler2D alphatexture;\n" +
-                "uniform vec4 alphadata;\n" +
-                "varying vec2 v_texCoord;\n" +
-                "void main(void)\n" +
-                "{\n" +
-                  "vec4 infoUv = texture2D(alphatexture, v_texCoord.xy);\n" +
-                "gl_FragColor =infoUv*alphadata;\n" +
-                "}"
-            return $str
-
-        }
-
-    }
+ 
 }
