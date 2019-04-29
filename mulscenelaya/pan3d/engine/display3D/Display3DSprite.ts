@@ -1,7 +1,4 @@
 ﻿module Pan3d {
-
-     
-   
     export class Display3DSprite extends Display3D {
 
         public isPerspective: boolean
@@ -41,19 +38,6 @@
 
 
         public dynamic: boolean = false;
-
-        public set alpha(value: number) {
-            this._alpha = value;
-            this.changeColor[0] = 1
-            this.changeColor[1] = 1
-            this.changeColor[2] = 1
-            this.changeColor[3] = value
-        }
-        public changeColor: Array<number> = [1, 1, 1, 1]
-        protected _alpha: number = 1;
-        public get alpha(): number {
-            return this._alpha;
-        }
 
         constructor() {
             super();
@@ -173,14 +157,27 @@
 
             }
         }
+        public set alpha(value: number) {
+            this._alpha = value;
+            this.changeColor[0] = 1
+            this.changeColor[1] = 1
+            this.changeColor[2] = 1
+            this.changeColor[3] = value
+        }
+        public changeColor: Array<number> = [1, 1, 1, 1]
+        protected _alpha: number = 1;
+        public get alpha(): number {
+            return this._alpha;
+        }
+
         private static alphaModelShader: Shader3D
         private upAlphaModel(): void {
-            if (!this.material||!this.objData) {
+            if (!this.material || !this.objData) {
                 return;
             }
             if (!Display3DSprite.alphaModelShader) {
                 Display3DSprite.alphaModelShader = new Shader3D()
-                Display3DSprite.alphaModelShader .vstr =
+                Display3DSprite.alphaModelShader.vstr =
                     "attribute vec3 v3Position;" +
                     "attribute vec2 v2CubeTexST;" +
                     "uniform mat4 vpMatrix3D;" +
@@ -197,7 +194,7 @@
 
                     "   gl_Position = vt0;" +
                     "}";
-                Display3DSprite.alphaModelShader .fragment =
+                Display3DSprite.alphaModelShader.fragment =
                     " precision mediump float;\n" +
                     "uniform sampler2D alphatexture;\n" +
                     "uniform vec4 alphadata;\n" +
@@ -208,16 +205,16 @@
                     "gl_FragColor =infoUv*alphadata;\n" +
                     "}";
 
- 
-                Display3DSprite.alphaModelShader .encode()
- 
+
+                Display3DSprite.alphaModelShader.encode()
+
             }
             this.updateBind();
 
             Scene_data.context3D.setProgram(Display3DSprite.alphaModelShader.program);
             Scene_data.context3D.cullFaceBack(false);
             Scene_data.context3D.setBlendParticleFactors(-1);
- 
+
             Scene_data.context3D.setVpMatrix(Display3DSprite.alphaModelShader, Scene_data.vpMatrix.m);
             Scene_data.context3D.setVcMatrix4fv(Display3DSprite.alphaModelShader, "posMatrix3D", this.posMatrix.m);
 
@@ -247,11 +244,12 @@
                         }
                     }
                     return txte
-                 
+
                 }
             }
             return null
         }
+
 
         public update(): void {
             if (this.dynamic) {
@@ -259,14 +257,14 @@
                     return;
                 }
             }
- 
+
             if (this._alpha == 1) {
                 this.updateMaterial();
             } else {
                 this.upAlphaModel()
             }
-      
-      
+
+
             // return;
             // Scene_data.context3D.setProgram(this.program);
             // Scene_data.context3D.setVcMatrix4fv(this.program, "viewMatrix3D", Scene_data.viewMatrx3D.m);

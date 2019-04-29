@@ -27,14 +27,40 @@ var layapan;
     var LayaSceneBaseChar = /** @class */ (function (_super) {
         __extends(LayaSceneBaseChar, _super);
         function LayaSceneBaseChar() {
-            var _this = _super.call(this) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
             _this._avatar = -1;
             _this._visible = true;
-            _this.x;
+            _this.isBuff = false;
             return _this;
         }
+        Object.defineProperty(LayaSceneBaseChar.prototype, "alpha", {
+            get: function () {
+                return this._alpha;
+            },
+            set: function (value) {
+                this._alpha = value;
+                this.changeColor[0] = 1;
+                this.changeColor[1] = 1;
+                this.changeColor[2] = 1;
+                this.changeColor[3] = value;
+                //this._partDic[$key]
+                for (var strKey in this._partDic) {
+                    var item = (Array(this._partDic[strKey]));
+                    for (var i = 0; i < item.length; i++) {
+                        if (item[i] && item[i][0]) {
+                            item[i][0].alpha = value;
+                        }
+                    }
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         LayaSceneBaseChar.prototype.updateMaterialMesh = function ($mesh) {
-            if (this.changeColor[0] != 1 || this.changeColor[1] != 1 || this.changeColor[2] != 1 || this.changeColor[3] != 1) {
+            // 如果是在战斗中，不要因为位置在透明层而设置模型的透明度
+            // 但是在战斗中中了隐身buff 还是得设置透明度
+            //  if (this.alpha < 1 && (this.isBuff || !this._isBattle)) {
+            if (this.alpha < 1) {
                 if (!LayaSceneBaseChar.alphaShader) {
                     LayaSceneBaseChar.alphaShader = this.makeAlphaShader();
                 }
@@ -46,7 +72,7 @@ var layapan;
                 this.setVcMatrix($mesh);
                 Scene_data.context3D.setRenderTexture($mesh.material.shader, "alphatexture", this.getAlphaTexture($mesh.material, $mesh.materialParam), 0);
                 this.setVa($mesh);
-                Scene_data.context3D.setVc4fv($mesh.material.shader, "alphadata", this.changeColor);
+                Scene_data.context3D.setVc4fv($mesh.material.shader, "alphadata", [1, 1, 1, this.alpha]);
                 this.setMeshVc($mesh);
                 Scene_data.context3D.drawCall($mesh.indexBuffer, $mesh.treNum);
                 $mesh.material.shader = $selfShader;
@@ -92,6 +118,7 @@ var layapan;
                 var $scene = this._scene;
                 if (value) {
                     if (!this._shadow) {
+                        console.log("无标识");
                         this._shadow = $scene.shadowManager.addShadow();
                     }
                 }
@@ -112,29 +139,6 @@ var layapan;
                 this._shadow._visible = this.visible;
             }
         };
-        Object.defineProperty(LayaSceneBaseChar.prototype, "alpha", {
-            get: function () {
-                return this._alpha;
-            },
-            set: function (value) {
-                this._alpha = value;
-                this.changeColor[0] = 1;
-                this.changeColor[1] = 1;
-                this.changeColor[2] = 1;
-                this.changeColor[3] = value;
-                //this._partDic[$key]
-                for (var strKey in this._partDic) {
-                    var item = (Array(this._partDic[strKey]));
-                    for (var i = 0; i < item.length; i++) {
-                        if (item[i] && item[i][0]) {
-                            item[i][0].alpha = value;
-                        }
-                    }
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
         LayaSceneBaseChar.prototype.getSceneCharAvatarUrl = function (num) {
             var $url = getRoleUrl(String(num));
             return getRoleUrl(String(num));
@@ -182,7 +186,6 @@ var layapan;
                     display.dynamic = true;
                     ary.push(display);
                     display.setBind(this, $bindSocket);
-                    console.log(this, this.alpha);
                     display.alpha = this.alpha;
                     this._scene.addSpriteDisplay(display);
                     if (item.isGroup) {

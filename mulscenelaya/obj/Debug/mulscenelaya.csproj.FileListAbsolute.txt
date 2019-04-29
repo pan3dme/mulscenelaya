@@ -12,9 +12,9 @@ D:\work\mulscenelaya\mulscenelaya\obj\Debug\mulscenelaya.csprojResolveAssemblyRe
 D:\work\mulscenelaya\mulscenelaya\obj\Debug\mulscenelaya.csproj.CoreCompileInputs.cache
 D:\work\mulscenelaya\mulscenelaya\obj\Debug\mulscenelaya.dll
 D:\work\mulscenelaya\mulscenelaya\obj\Debug\mulscenelaya.pdb
-E:\github\mulscenelaya\mulscenelaya\obj\Debug\mulscenelaya.dll
-E:\github\mulscenelaya\mulscenelaya\obj\Debug\mulscenelaya.pdb
 E:\github\mulscenelaya\mulscenelaya\bin\mulscenelaya.dll.config
 E:\github\mulscenelaya\mulscenelaya\bin\mulscenelaya.dll
 E:\github\mulscenelaya\mulscenelaya\bin\mulscenelaya.pdb
 E:\github\mulscenelaya\mulscenelaya\obj\Debug\mulscenelaya.csproj.CoreCompileInputs.cache
+E:\github\mulscenelaya\mulscenelaya\obj\Debug\mulscenelaya.dll
+E:\github\mulscenelaya\mulscenelaya\obj\Debug\mulscenelaya.pdb

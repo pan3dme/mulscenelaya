@@ -86,7 +86,6 @@ module Pan3d {
         }
 
         public vstr: string
- 
         public destory(): void {
             this.vertex = null;
             this.fragment = null;
@@ -95,6 +94,4 @@ module Pan3d {
             Scene_data.context3D.deleteShader(this);
         }
     }
-
- 
 }

@@ -25,20 +25,6 @@ var Pan3d;
             return _this;
             //this.lightMapTexture = TextureManager.getInstance().defaultLightMap;
         }
-        Object.defineProperty(Display3DSprite.prototype, "alpha", {
-            get: function () {
-                return this._alpha;
-            },
-            set: function (value) {
-                this._alpha = value;
-                this.changeColor[0] = 1;
-                this.changeColor[1] = 1;
-                this.changeColor[2] = 1;
-                this.changeColor[3] = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
         Object.defineProperty(Display3DSprite.prototype, "aabbVect", {
             get: function () {
                 if (!this._aabbVect) {
@@ -145,6 +131,20 @@ var Pan3d;
                         }
                     }
                 }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Display3DSprite.prototype, "alpha", {
+            get: function () {
+                return this._alpha;
+            },
+            set: function (value) {
+                this._alpha = value;
+                this.changeColor[0] = 1;
+                this.changeColor[1] = 1;
+                this.changeColor[2] = 1;
+                this.changeColor[3] = value;
             },
             enumerable: true,
             configurable: true

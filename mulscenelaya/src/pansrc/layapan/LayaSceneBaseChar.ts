@@ -19,22 +19,48 @@ module layapan {
 
     import Display3DSprite = Pan3d.Display3DSprite
     import ShadowManager = Pan3d.ShadowManager
-    
- 
-  
+
+
+
     export class LayaSceneBaseChar extends Pan3d.Display3dMovie {
         private _avatar: number = -1;
-   
-        public _visible: boolean = true
 
-        constructor() {
-            super();
-            this.x
+        public set alpha(value: number) {
+            this._alpha = value;
+            this.changeColor[0] = 1
+            this.changeColor[1] = 1
+            this.changeColor[2] = 1
+            this.changeColor[3] = value
+
+            //this._partDic[$key]
+
+            for (var strKey in this._partDic) {
+                var item: Array<any> = (Array<any>(this._partDic[strKey]))
+                for (var i: number = 0; i < item.length; i++) {
+
+                    if (item[i] && item[i][0]) {
+                        item[i][0].alpha = value
+                    }
+
+
+                }
+
+
+            }
         }
-   
+        public get alpha(): number {
+            return this._alpha;
+        }
+
+        public _visible: boolean = true
  
+        public isBuff: boolean = false;
         public updateMaterialMesh($mesh: MeshData): void {
-            if (this.changeColor[0] != 1 || this.changeColor[1] != 1 || this.changeColor[2] != 1 || this.changeColor[3] != 1) {
+            // 如果是在战斗中，不要因为位置在透明层而设置模型的透明度
+            // 但是在战斗中中了隐身buff 还是得设置透明度
+          //  if (this.alpha < 1 && (this.isBuff || !this._isBattle)) {
+            if (this.alpha < 1 ) {
+ 
                 if (!LayaSceneBaseChar.alphaShader) {
                     LayaSceneBaseChar.alphaShader = this.makeAlphaShader();
                 }
@@ -44,12 +70,9 @@ module layapan {
                 Scene_data.context3D.cullFaceBack(false);
                 Scene_data.context3D.setBlendParticleFactors(-1);
                 this.setVcMatrix($mesh);
-         
- 
                 Scene_data.context3D.setRenderTexture($mesh.material.shader, "alphatexture", this.getAlphaTexture($mesh.material, $mesh.materialParam), 0);
- 
                 this.setVa($mesh);
-                Scene_data.context3D.setVc4fv($mesh.material.shader, "alphadata", this.changeColor);
+                Scene_data.context3D.setVc4fv($mesh.material.shader, "alphadata", [1, 1, 1, this.alpha]);
                 this.setMeshVc($mesh);
                 Scene_data.context3D.drawCall($mesh.indexBuffer, $mesh.treNum);
                 $mesh.material.shader = $selfShader;
@@ -78,20 +101,20 @@ module layapan {
         }
 
 
-		public get visible(): boolean {
-			return this._visible
-		}
-		public set visible(value: boolean) {
-			this._visible = value
-		}
+        public get visible(): boolean {
+            return this._visible
+        }
+        public set visible(value: boolean) {
+            this._visible = value
+        }
 
-		public setAvatar(num: number): void {
+        public setAvatar(num: number): void {
 
-			if (this._avatar == num) {
-				return;
-			}
-			this._avatar = num;
-			this.setRoleUrl(this.getSceneCharAvatarUrl(num));
+            if (this._avatar == num) {
+                return;
+            }
+            this._avatar = num;
+            this.setRoleUrl(this.getSceneCharAvatarUrl(num));
 
 
         }
@@ -99,6 +122,7 @@ module layapan {
             var $scene: LayaOverride2dSceneManager = <LayaOverride2dSceneManager>this._scene;
             if (value) {
                 if (!this._shadow) {
+                    console.log("无标识")
                     this._shadow = $scene.shadowManager.addShadow();
                 }
             } else {
@@ -107,58 +131,31 @@ module layapan {
                 }
             }
         }
-		public update(): void {
-			if (this.visible) {
-				super.update()
-			}
-			if (this._shadow) {
-				this._shadow._visible = this.visible;
-			}
-        }
-        public set alpha(value: number) {
-            this._alpha = value;
-            this.changeColor[0] = 1
-            this.changeColor[1] = 1
-            this.changeColor[2] = 1
-            this.changeColor[3] = value
-
-            //this._partDic[$key]
-
-            for (var strKey in this._partDic) {
-                var item: Array<any> = (Array<any>(this._partDic[strKey]))
-                for (var i: number = 0; i < item.length; i++) {
-
-                    if (item[i] && item[i][0]) {
-                        item[i][0].alpha = value
-                    }
-                 
-              
-                }
-
-
+        public update(): void {
+            if (this.visible) {
+                super.update()
+            }
+            if (this._shadow) {
+                this._shadow._visible = this.visible;
             }
         }
-        public get alpha(): number {
-            return this._alpha;
+
+        protected getSceneCharAvatarUrl(num: number): string {
+
+            var $url: string = getRoleUrl(String(num))
+            return getRoleUrl(String(num));
+        }
+        protected getSceneCharWeaponUrl(num: number, $suffix: string = ""): string {
+            return getModelUrl(String(num + $suffix));
         }
 
+        // 是否播放中
+        isPlaying(): boolean {
+            // if(this._completeState != 1){
+            // 	return true;
+            // }
 
-		protected getSceneCharAvatarUrl(num: number): string {
-
-			var $url: string = getRoleUrl(String(num))
-			return getRoleUrl(String(num));
-		}
-		protected getSceneCharWeaponUrl(num: number, $suffix: string = ""): string {
-			return getModelUrl(String(num + $suffix));
-		}
-
-		// 是否播放中
-		isPlaying():boolean{
-			// if(this._completeState != 1){
-			// 	return true;
-			// }
-			
-			return this._completeState != 1 || !this._curentFrame || (this._curentFrame < (this._animDic[this.curentAction].matrixAry.length - 1));
+            return this._completeState != 1 || !this._curentFrame || (this._curentFrame < (this._animDic[this.curentAction].matrixAry.length - 1));
         }
 
         protected loadPartRes($bindSocket: string, groupRes: GroupRes, ary: Array<any>): void {
@@ -194,8 +191,7 @@ module layapan {
                     display.dynamic = true;
                     ary.push(display);
                     display.setBind(this, $bindSocket);
-                    console.log(this, this.alpha)
-                    display.alpha = this.alpha;
+                    display.alpha = this.alpha
                     this._scene.addSpriteDisplay(display);
                     if (item.isGroup) {
                         display.setGroup(posV3d, rotationV3d, scaleV3d);
@@ -282,5 +278,5 @@ module layapan {
                 }
             }
         }
-	}
+    }
 }
