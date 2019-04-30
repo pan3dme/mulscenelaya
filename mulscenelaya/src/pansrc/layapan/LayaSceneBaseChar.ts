@@ -58,8 +58,8 @@ module layapan {
         public updateMaterialMesh($mesh: MeshData): void {
             // 如果是在战斗中，不要因为位置在透明层而设置模型的透明度
             // 但是在战斗中中了隐身buff 还是得设置透明度
-          //  if (this.alpha < 1 && (this.isBuff || !this._isBattle)) {
-            if (this.alpha < 1 ) {
+           if (this.alpha < 1 ) {
+      
  
                 if (!LayaSceneBaseChar.alphaShader) {
                     LayaSceneBaseChar.alphaShader = this.makeAlphaShader();
