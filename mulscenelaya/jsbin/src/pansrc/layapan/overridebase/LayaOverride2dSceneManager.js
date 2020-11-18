@@ -2,9 +2,9 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -53,7 +53,7 @@ var topfront;
                 this.startTm = Pan3d.TimeUtil.getTimer();
                 this.endTm = this.startTm + value;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         BaseFrontVo.prototype.makeUi = function (value) {
@@ -92,7 +92,7 @@ var topfront;
                 this._uiRect.x = value;
                 this.changeSize();
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(BaseFrontVo.prototype, "scale", {
@@ -104,7 +104,7 @@ var topfront;
                 this.width = this.baseRect.width * this._scale;
                 this.height = this.baseRect.height * this._scale;
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(BaseFrontVo.prototype, "alpha", {
@@ -113,7 +113,7 @@ var topfront;
                     this.uiItem[i].alpha = value;
                 }
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(BaseFrontVo.prototype, "y", {
@@ -124,7 +124,7 @@ var topfront;
                 this._uiRect.y = value;
                 this.changeSize();
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(BaseFrontVo.prototype, "width", {
@@ -135,7 +135,7 @@ var topfront;
                 this._uiRect.width = value;
                 this.changeSize();
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(BaseFrontVo.prototype, "height", {
@@ -146,7 +146,7 @@ var topfront;
                 this._uiRect.height = value;
                 this.changeSize();
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         BaseFrontVo.prototype.changeSize = function () {

@@ -15,7 +15,7 @@ var Launch = /** @class */ (function () {
         get: function () {
             return this._canvas;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Launch.prototype.init = function () {
@@ -26,7 +26,7 @@ var Launch = /** @class */ (function () {
         mainpan3d.canvas = main.canvas;
         Pan3d.Scene_data.fileRoot = " http://" + document.domain + "/res/";
         Pan3d.Scene_data.fileRoot = "res/";
-        //  Pan3d.Scene_data.fileRoot = "https://webpan.oss-cn-shanghai.aliyuncs.com/res/";
+        Pan3d.Scene_data.fileRoot = "https://webpan.oss-cn-shanghai.aliyuncs.com/res/";
         this.loadBaseUiArt();
     };
     Launch.prototype.addLaya3dScene = function () {

@@ -28,7 +28,8 @@ class Launch {
         mainpan3d.canvas = main.canvas;
         Pan3d.Scene_data.fileRoot = " http://" + document.domain + "/res/";
         Pan3d.Scene_data.fileRoot = "res/";
-      //  Pan3d.Scene_data.fileRoot = "https://webpan.oss-cn-shanghai.aliyuncs.com/res/";
+       Pan3d.Scene_data.fileRoot = "https://webpan.oss-cn-shanghai.aliyuncs.com/res/";
+     
         this.loadBaseUiArt()
 
  
